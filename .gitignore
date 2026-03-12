@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Build output
+dist/
+
+# Environment variables — NEVER commit real secrets
+.env
+backend/.env
+
+# Vite / editor
+.vite/
+.DS_Store
+*.local
+
+.vercel

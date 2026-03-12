@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function AnimatedNumber({ value, duration = 800, decimals = 0, className = '' }) {
-  const [displayValue, setDisplayValue] = useState(0);
-  const startValueRef = useRef(0);
-  const startTimeRef = useRef(null);
+export default function AnimatedNumber({ value, duration = 600, decimals = 0, className = '' }) {
+  const spanRef = useRef(null);
+  const startValueRef = useRef(Number(value) || 0);
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -13,24 +12,27 @@ export default function AnimatedNumber({ value, duration = 800, decimals = 0, cl
 
     if (diff === 0) return;
 
-    startTimeRef.current = null;
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+
+    let startTime = null;
+
+    const format = (v) =>
+      decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
 
     const animate = (timestamp) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
-      const elapsed = timestamp - startTimeRef.current;
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = startVal + diff * eased;
 
-      setDisplayValue(current);
+      if (spanRef.current) spanRef.current.textContent = format(current);
 
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(animate);
       } else {
         startValueRef.current = endVal;
-        setDisplayValue(endVal);
+        if (spanRef.current) spanRef.current.textContent = format(endVal);
       }
     };
 
@@ -39,11 +41,12 @@ export default function AnimatedNumber({ value, duration = 800, decimals = 0, cl
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [value, duration]);
+  }, [value, duration, decimals]);
 
-  const formatted = decimals > 0
-    ? displayValue.toFixed(decimals)
-    : Math.round(displayValue).toLocaleString();
+  const initial =
+    decimals > 0
+      ? (Number(value) || 0).toFixed(decimals)
+      : Math.round(Number(value) || 0).toLocaleString();
 
-  return <span className={className}>{formatted}</span>;
+  return <span ref={spanRef} className={className}>{initial}</span>;
 }

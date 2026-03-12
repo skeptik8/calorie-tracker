@@ -41,10 +41,7 @@ export default function CalorieRing({ consumed, goal, remaining }) {
             strokeDasharray={CIRCUMFERENCE}
             initial={{ strokeDashoffset: CIRCUMFERENCE }}
             animate={{ strokeDashoffset }}
-            transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              filter: `drop-shadow(0 0 8px ${glowColor}) drop-shadow(0 0 16px ${glowColor})`,
-            }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           />
         </svg>
 

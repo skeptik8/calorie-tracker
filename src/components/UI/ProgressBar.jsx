@@ -37,7 +37,7 @@ export default function ProgressBar({
           className="h-full rounded-full"
           initial={animate ? { width: 0 } : { width: `${percent}%` }}
           animate={{ width: `${percent}%` }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
           style={{
             backgroundColor: barColor,
             boxShadow: `0 0 8px ${barColor}80`,
